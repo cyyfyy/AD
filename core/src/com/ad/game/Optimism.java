@@ -1,7 +1,13 @@
 package com.ad.game;
 
 import com.ad.game.sprites.Wizard;
+import com.ad.game.views.EndScreen;
+import com.ad.game.views.MainScreen;
+import com.ad.game.views.MenuScreen;
+import com.ad.game.views.PreferencesScreen;
+import com.ad.game.views.SplashScreen;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,7 +25,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class Optimism extends ApplicationAdapter {
+public class Optimism extends Game {
 	private final float UPDATE_TIME = 1/60f;
 	float timer;
 	SpriteBatch batch;
@@ -29,15 +35,53 @@ public class Optimism extends ApplicationAdapter {
 	Texture playerChar;
 	Texture friendlyChar;
 	HashMap<String, Wizard> friends;
+	private SplashScreen splashScreen;
+	private PreferencesScreen preferencesScreen;
+	private MenuScreen menuScreen;
+	private MainScreen mainScreen;
+	private EndScreen endScreen;
+	private AppPreferences preferences;
+
+	public enum ScreenType {
+		MENU, PREFERENCES, MAIN, END
+	};
 	
 	@Override
 	public void create () {
+		splashScreen = new SplashScreen(this);
+		preferences = new AppPreferences();
 		batch = new SpriteBatch();
 		playerChar = new Texture("idleWiz.png");
 		friendlyChar = new Texture("idleWiz2.png");
 		friends = new HashMap<String, Wizard>();
 		connectSocket();
 		configSocketEvents();
+		setScreen(splashScreen);
+	}
+
+	public void changeScreen(ScreenType screen){
+		switch(screen){
+			case MENU:
+				if(menuScreen == null) menuScreen = new MenuScreen(this);
+				this.setScreen(menuScreen);
+				break;
+			case PREFERENCES:
+				if(preferencesScreen == null) preferencesScreen = new PreferencesScreen(this);
+				this.setScreen(preferencesScreen);
+				break;
+			case MAIN:
+				if(mainScreen == null) mainScreen = new MainScreen(this);
+				this.setScreen(mainScreen);
+				break;
+			case END:
+				if(endScreen == null) endScreen = new EndScreen(this);
+				this.setScreen(endScreen);
+				break;
+		}
+	}
+
+	public AppPreferences getPreferences(){
+		return this.preferences;
 	}
 
 	public void handleInput(float dt){
