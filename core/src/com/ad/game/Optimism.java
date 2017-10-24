@@ -1,5 +1,6 @@
 package com.ad.game;
 
+import com.ad.game.loader.AssetWarehouse;
 import com.ad.game.sprites.Wizard;
 import com.ad.game.views.EndScreen;
 import com.ad.game.views.MainScreen;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -41,6 +43,8 @@ public class Optimism extends Game {
 	private MainScreen mainScreen;
 	private EndScreen endScreen;
 	private AppPreferences preferences;
+//	public AssetWarehouse warehouse = new AssetWarehouse();
+//	private Music song;
 
 	public enum ScreenType {
 		MENU, PREFERENCES, MAIN, END
@@ -57,6 +61,12 @@ public class Optimism extends Game {
 		connectSocket();
 		configSocketEvents();
 		setScreen(splashScreen);
+
+//		warehouse.queueAddMusic(); //find any music defined in the warehouse
+//		warehouse.manager.finishLoading(); //load music and wait for that to finish
+//		song = warehouse.manager.get("music/song.mp3"); //<-- note the string here matches the string in the warehouse
+//		song.play();
+
 	}
 
 	public void changeScreen(ScreenType screen){
@@ -129,6 +139,7 @@ public class Optimism extends Game {
 		batch.dispose();
 		playerChar.dispose();
 		friendlyChar.dispose();
+//		warehouse.manager.dispose();
 	}
 
 	public void connectSocket(){
