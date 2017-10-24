@@ -1,9 +1,13 @@
 package com.ad.game.views;
 
 import com.ad.game.Optimism;
+import com.ad.game.OptimismModel;
+import com.ad.game.controller.KeyboardController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -14,39 +18,42 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainScreen implements Screen{
     private Optimism parent;
-    private Stage stage;
-    private Table table;
+    private OptimismModel model;
+    private OrthographicCamera camera;
+    private KeyboardController controller;
+    private SpriteBatch sb;
 
     public MainScreen(Optimism optimism){
         parent = optimism;
-        stage = new Stage(new ScreenViewport());
+        camera = new OrthographicCamera(32, 24);
+        controller = new KeyboardController();
+        model = new OptimismModel(controller, camera, parent.warehouse);
 
+        sb = new SpriteBatch();
+        sb.setProjectionMatrix(camera.combined);
         //get images here from assets folder
         //e.g. image = get("image.png");
     }
 
     @Override
     public void show() {
-        table = new Table();
-        //render assets here
-        //e.g. table.add(img);
-        //table.row();
-        stage.addActor(table);
+        Gdx.input.setInputProcessor(controller);
     }
 
     @Override
     public void render(float delta) {
+        model.logicStep(delta);
         Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //load assets
-        stage.act();
-        stage.draw();
+
+        sb.begin();
+//        sb.draw(XYZ);
+        sb.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+
     }
 
     @Override
@@ -66,6 +73,6 @@ public class MainScreen implements Screen{
 
     @Override
     public void dispose() {
-        stage.dispose();
+
     }
 }

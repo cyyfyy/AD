@@ -43,7 +43,7 @@ public class Optimism extends Game {
 	private MainScreen mainScreen;
 	private EndScreen endScreen;
 	private AppPreferences preferences;
-//	public AssetWarehouse warehouse = new AssetWarehouse();
+	public AssetWarehouse warehouse = new AssetWarehouse();
 //	private Music song;
 
 	public enum ScreenType {
@@ -139,7 +139,7 @@ public class Optimism extends Game {
 		batch.dispose();
 		playerChar.dispose();
 		friendlyChar.dispose();
-//		warehouse.manager.dispose();
+		warehouse.manager.dispose();
 	}
 
 	public void connectSocket(){

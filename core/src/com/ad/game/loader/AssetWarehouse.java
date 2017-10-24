@@ -1,6 +1,7 @@
 package com.ad.game.loader;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 
 /**
  * Created by cfenderson on 10/24/17.
@@ -22,7 +23,7 @@ public class AssetWarehouse {
 
     // Textures go here...
     //public final String gameImages = "images/game.atlas";
-    //public final String loadingImages = "images/loading.atlas";
+    public final String loadingImage = "hound.png";
 
     public void queueAddFonts(){
 
@@ -39,6 +40,7 @@ public class AssetWarehouse {
     // a small set of images used by the loading screen
     public void queueAddLoadingImages(){
 //        manager.load(loadingImages, TextureAtlas.class);
+        manager.load(loadingImage, Texture.class);
     }
 
     public void queueAddSkin(){
