@@ -22,7 +22,7 @@ io.on('connection', function(socket){
          "Y: " + data.y);
 
 	    for(var i = 0; i < players.length; i++){
-	        if(players[i].id = data.id){
+	        if(players[i].id == data.id){
 	            players[i].x = data.x;
 	            players[i].y = data.y;
 	        }

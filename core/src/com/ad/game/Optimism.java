@@ -23,7 +23,6 @@ public class Optimism extends ApplicationAdapter {
 	private final float UPDATE_TIME = 1/60f;
 	float timer;
 	SpriteBatch batch;
-	Texture img;
 	private Socket socket;
 	String playerId;
 	Wizard player;
