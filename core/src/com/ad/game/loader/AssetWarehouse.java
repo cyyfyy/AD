@@ -1,7 +1,10 @@
 package com.ad.game.loader;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * Created by cfenderson on 10/24/17.
@@ -12,17 +15,18 @@ public class AssetWarehouse {
     public final AssetManager manager = new AssetManager();
 
     // Sounds go here...
-    //public final String boingSound = "sounds/boing.wav";
-    //public final String pingSound = "sounds/ping.wav";
+    public final String boingSound = "sounds/boing.wav";
+    public final String pingSound = "sounds/ping.wav";
 
     // Music goes here...
     //public final String playingSong = "music/song.mp3";
 
     // Skin for UI goes here...
-    //public final String skin = "skin/ui.json";
+    public final String skin = "skins/flatUI.json";
 
     // Textures go here...
-    //public final String gameImages = "images/game.atlas";
+    public final String playerChar = "idleWiz.png";
+    public final String friendlyChar = "idleWiz2.png";
     public final String loadingImage = "hound.png";
 
     public void queueAddFonts(){
@@ -34,18 +38,18 @@ public class AssetWarehouse {
     }
 
     public void queueAddImages(){
-//        manager.load(gameImages, TextureAtlas.class);
+        manager.load(playerChar, Texture.class);
+        manager.load(friendlyChar, Texture.class);
     }
 
     // a small set of images used by the loading screen
     public void queueAddLoadingImages(){
-//        manager.load(loadingImages, TextureAtlas.class);
         manager.load(loadingImage, Texture.class);
     }
 
     public void queueAddSkin(){
-//        SkinParameter params = new SkinParameter("skin/glassy-ui.atlas");
-//        manager.load(skin, Skin.class, params);
+        SkinParameter params = new SkinParameter("skins/flatUI.atlas");
+        manager.load(skin, Skin.class, params);
 
     }
 
@@ -54,8 +58,8 @@ public class AssetWarehouse {
     }
 
     public void queueAddSounds(){
-//        manager.load(boingSound, Sound.class);
-//        manager.load(pingSound, Sound.class);
+        manager.load(boingSound, Sound.class);
+        manager.load(pingSound, Sound.class);
     }
 
 

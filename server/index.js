@@ -3,6 +3,12 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var players = [];
 
+function player(id, x, y){
+    this.id = id;
+    this.x = x;
+    this.y = y;
+}
+
 server.listen(8080, function(){
 	console.log("Server is up...");
 });
@@ -12,6 +18,7 @@ io.on('connection', function(socket){
 	socket.emit('socketID', {id: socket.id}); //sends to one socket
 	socket.emit('getPlayers', players);
 	socket.broadcast.emit('newPlayer', {id: socket.id}); //sends to all _other_ connected clients
+	players.push(new player(socket.id, 0, 0));
 	socket.on('playerMoved', function(data){
 	    data.id = socket.id;
 	    socket.broadcast.emit('playerMoved', data);
@@ -38,11 +45,4 @@ io.on('connection', function(socket){
 		    }
 		}
 	});
-	players.push(new player(socket.id, 0, 0));
 });
-
-function player(id, x, y){
-    this.id = id;
-    this.x = x;
-    this.y = y;
-}

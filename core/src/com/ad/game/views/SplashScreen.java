@@ -4,10 +4,13 @@ import com.ad.game.Optimism;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
@@ -21,7 +24,7 @@ public class SplashScreen implements Screen{
 
     private int currentLoadingStage = 0;
 
-    public float countDown = 3f; //how long the splash screen takes
+    public float countDown = 10f; //how long the splash screen takes
     private Stage stage;
     private Table table;
 
@@ -30,20 +33,18 @@ public class SplashScreen implements Screen{
         stage = new Stage(new ScreenViewport());
         System.out.println("Loading images....");
         parent.warehouse.queueAddLoadingImages();
+        parent.warehouse.manager.finishLoading();
+        splashImage = new Image(parent.warehouse.manager.get("hound.png", Texture.class));
+
         //houndAnimation = new Animation(0.07f, atlas.findRegions("flames/flames"), PlayMode.LOOP);
 
-        //get images here from assets folder
-        splashImage = parent.warehouse.manager.get("hound.png");
     }
 
     @Override
     public void show() {
         table = new Table();
-        //render assets here
-        table.row();
-        table.add(splashImage);
-        table.row();
-
+        table.setFillParent(true);
+        table.add(splashImage).width(splashImage.getWidth()*1.5f).height(splashImage.getHeight()*1.5f);
         stage.addActor(table);
     }
 
@@ -57,7 +58,7 @@ public class SplashScreen implements Screen{
             currentLoadingStage+= 1;
             switch(currentLoadingStage){
                 case 1:
-                    System.out.println("Loading fonts....");
+                    System.out.println("Loading Fonts....");
                     parent.warehouse.queueAddFonts();
                     break;
                 case 2:
@@ -69,7 +70,7 @@ public class SplashScreen implements Screen{
                     parent.warehouse.queueAddSounds();
                     break;
                 case 4:
-                    System.out.println("Loading fonts....");
+                    System.out.println("Loading Music....");
                     parent.warehouse.queueAddMusic();
                     break;
                 case 5:

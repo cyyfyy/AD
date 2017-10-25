@@ -31,8 +31,6 @@ public class MainScreen implements Screen{
 
         sb = new SpriteBatch();
         sb.setProjectionMatrix(camera.combined);
-        //get images here from assets folder
-        //e.g. image = get("image.png");
     }
 
     @Override
@@ -47,7 +45,7 @@ public class MainScreen implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sb.begin();
-//        sb.draw(XYZ);
+        model.draw(sb);
         sb.end();
     }
 
