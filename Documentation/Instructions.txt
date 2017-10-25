@@ -1,0 +1,1 @@
+To get running in terminal cd into server. Then run the command node index.js
