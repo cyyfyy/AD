@@ -1,0 +1,9 @@
+
+***Mechanics***
+	- Quantum Move 
+		- Charged move 
+		- Make a probalistic move, splitting you into two diffrent locations. If an evaluation weather or not a unit is there the location is collapsed.
+
+***Themes***
+	-Space Colonization?
+	-Political/Diplomatic focus instead of battle focus?
