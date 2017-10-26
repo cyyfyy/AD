@@ -39,3 +39,35 @@
 	-You are a party of the galactic parlament. 
 	-You pass legislation that is enacted for the good of the empire and for the good of you constituanits. 
 	
+
+
+
+***Some thoughts***
+A few ideas: each player is a region or faction within a kingdom
+each faction has 4 estates (types of actor)
+Nobles
+Clergy
+Burgess
+Peasants
+
+Each turn players must decide what each actor group in their region is doing
+e.g. taking an action or actions
+Example actions:
+Noble actors COULD negotiate with foreign powers, make laws, levy taxes, marry each other, start skirmishes, levy militias, fight as knights
+Clergy actors COULD spread religion, spy on other actors, convert enemies (or allies), increase local happiness, increase education/science, communicate with the pope, collect church taxes
+Burgess actors COULD produce goods, add economic activity, trade with other regions or foreign powers, move logistical resources
+Peasants actors COULD produce food, produce simple goods, fight wars/skirmishes
+
+Each player has to help maintain the overall stability of the country, but only one player can win
+The king kind of adds a random element to the game, seemingly changing rules and priorities on a whim
+The king could have some sort of council close to him, that starts the game with equal representation from each faction
+e.g. a council of 8 for a 4 player game -- 2 from each player
+As the game progresses, taking certain actions can help garner (garner garner) influence or curry favor with the king
+potentially gaining or losing seats on the council
+If a player ever has a majority of the seats on the council they win e.g. 5/8 in the example game above
+
+Alternatively, each player could take on the role of one of the estates e.g. one player is the nobles
+
+
+
+unrelated: PVP-tower defense?
