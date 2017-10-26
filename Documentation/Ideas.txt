@@ -1,9 +1,41 @@
 
 ***Mechanics***
-	- Quantum Move 
+	-Critical Stats:
+		- party support (this is % of population that supports you 0 Sum)
+		- party funds
+		
+	-Each turn you may introduce a bill onto the parliment floor
+		+ A Bill on the Floor
+			- things a bill can do:
+				* fund the galactic army from the coffers of the parties (a single party or many)
+				* draft troops into the army from the given party.
+				* enact propaganda for a party, or the galactic empire as a whole
+				* decreade/increase taxes
+				* adjust the way taxes are collected
+				... these are the mechanics that make it interesting. Lets use US polotics as our insperation
+	- If a bill was introduced you may vote to pass the bill
+	
+	- If the bill fails anyone may modify the bill
+		+ all modifications are viewed live and locked when the round closes
+			- this makes it a valid stratagy to sneak somthing in last minute
+	
+	- If you dont vote on a bill it is treated as an abstain
+	
+	- each turn you may spend money inorder to gain support
+	
+	- you may also spend the round campaining doing nothing in parlament all votes are abstained but gain support for next round
+	
+	- Voting power is dictated by the amount of support the party has
+	
+		
+
+	- Quantum Move (Nope cool idea but not in this game)
 		- Charged move 
 		- Make a probalistic move, splitting you into two diffrent locations. If an evaluation weather or not a unit is there the location is collapsed.
 
 ***Themes***
 	-Space Colonization?
 	-Political/Diplomatic focus instead of battle focus?
+	-You are a party of the galactic parlament. 
+	-You pass legislation that is enacted for the good of the empire and for the good of you constituanits. 
+	
