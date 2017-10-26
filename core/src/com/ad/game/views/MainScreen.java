@@ -1,14 +1,14 @@
 package com.ad.game.views;
 
 import com.ad.game.Optimism;
-import com.ad.game.OptimismModel;
-import com.ad.game.controller.KeyboardController;
+import com.ad.game.models.MainModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -18,24 +18,36 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainScreen implements Screen{
     private Optimism parent;
-    private OptimismModel model;
-    private OrthographicCamera camera;
-    private KeyboardController controller;
-    private SpriteBatch sb;
+    private Stage stage;
+    private Skin skin;
+    private TextureAtlas atlas;
+
+    private ColorChooser chooser;
+    private boolean connected = false;
+
+    private MainModel model;
 
     public MainScreen(Optimism optimism){
         parent = optimism;
-        camera = new OrthographicCamera(32, 24);
-        controller = new KeyboardController();
-        model = new OptimismModel(controller, camera, parent.warehouse);
+        stage = new Stage(new ScreenViewport());
+        chooser = new ColorChooser();
+        model = new MainModel(parent.warehouse);
 
-        sb = new SpriteBatch();
-        sb.setProjectionMatrix(camera.combined);
+        parent.warehouse.queueAddSkin();
+        parent.warehouse.manager.finishLoading();
+        skin = parent.warehouse.manager.get("skins/flatUI.json");
+        atlas = parent.warehouse.manager.get("skins/flatUI.atlas");
     }
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(controller);
+        Gdx.input.setInputProcessor(stage);
+
+        Table table = new Table();
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        chooser.createColorChooser(table, skin);
     }
 
     @Override
@@ -44,9 +56,19 @@ public class MainScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        sb.begin();
-        model.draw(sb);
-        sb.end();
+        if(chooser.colorChoice == null){
+            stage.act();
+            stage.draw();
+        } else if (connected) {
+            model.draw(stage.getBatch());
+
+            stage.act();
+            stage.draw();
+        } else {
+            stage.clear(); //switch from chooser to model
+            model.connect();
+            connected = true;
+        }
     }
 
     @Override
