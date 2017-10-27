@@ -66,7 +66,7 @@ public class MainScreen implements Screen{
             stage.draw();
         } else {
             stage.clear(); //switch from chooser to model
-            model.connect();
+            model.connect(chooser.colorChoice);
             connected = true;
         }
     }

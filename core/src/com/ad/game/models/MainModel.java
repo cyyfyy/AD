@@ -2,10 +2,11 @@ package com.ad.game.models;
 
 import com.ad.game.controller.KeyboardController;
 import com.ad.game.loader.AssetWarehouse;
-import com.ad.game.sprites.Wizard;
+import com.ad.game.sprites.PlayerSquare;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.socket.client.IO;
@@ -26,9 +28,7 @@ import io.socket.emitter.Emitter;
  */
 
 public class MainModel {
-    private KeyboardController controller;
     private AssetWarehouse warehouse;
-    private OrthographicCamera camera;
     private Sound ping;
     private Sound boing;
 
@@ -36,10 +36,14 @@ public class MainModel {
     private float timer;
     private Socket socket;
     private String playerId;
-    private Wizard player;
-    private Texture playerChar;
-    private Texture friendlyChar;
-    private HashMap<String, Wizard> friends;
+    private PlayerSquare player;
+    private Color playerColor;
+    private Texture playerBanner;
+    private Texture check;
+    private Texture nocheck;
+    private HashMap<String, PlayerSquare> connectedPlayers;
+    private ArrayList<Color> colors;
+    private ArrayList<Vector2> positions;
 
     public static final int BOING_SOUND = 0;
     public static final int PING_SOUND = 1;
@@ -51,24 +55,42 @@ public class MainModel {
         warehouse.queueAddImages();
         warehouse.manager.finishLoading();
 
+        playerBanner = warehouse.manager.get("blotch.png");
+        check = warehouse.manager.get("check.png");
+        nocheck = warehouse.manager.get("nocheck.png");
         ping = warehouse.manager.get("sounds/ping.wav");
         boing = warehouse.manager.get("sounds/boing.wav");
-        playerChar = warehouse.manager.get("idleWiz.png");
-        friendlyChar = warehouse.manager.get("idleWiz2.png");
-        friends = new HashMap<String, Wizard>();
+        connectedPlayers = new HashMap<String, PlayerSquare>();
+        colors = new ArrayList<Color>();
+        colors.add(Color.RED);
+        colors.add(Color.ORANGE);
+        colors.add(Color.YELLOW);
+        colors.add(Color.GREEN);
+        colors.add(Color.BLUE);
+        positions = new ArrayList<Vector2>();
+        positions.add(new Vector2(350, 50));
+        positions.add(new Vector2(200, 200));
+        positions.add(new Vector2(250, 350));
+        positions.add(new Vector2(400, 350));
+        positions.add(new Vector2(500, 200));
     }
 
-    public void connect(){
+    public void connect(Color chosenColor){
+        playerColor = chosenColor;
+        colors.remove(chosenColor);
         connectSocket();
         configSocketEvents();
+        playSound(0);
     }
 
     public void draw(Batch batch){
         batch.begin();
         if(player != null){ //draw a player if they have connected
+            batch.setColor(playerColor);
             batch.draw(player.getTexture(),player.getX(),player.getY());
         }
-        for(HashMap.Entry<String, Wizard> entry : friends.entrySet()){
+        for(HashMap.Entry<String, PlayerSquare> entry : connectedPlayers.entrySet()){
+            batch.setColor(entry.getValue().getPlayerColor());
             batch.draw(entry.getValue().getTexture(),entry.getValue().getX(),entry.getValue().getY());
         }
         batch.end();
@@ -83,27 +105,21 @@ public class MainModel {
     }
 
     private void handleInput(float dt){
-        if (player != null){
-            if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                player.setPosition(player.getX() + (-200 * dt), player.getY());
-            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                player.setPosition(player.getX() + (200 * dt), player.getY());
-            }
-        }
+
     }
 
     public void updateServer(float dt){
-        timer += dt;
-        if(timer >= UPDATE_TIME && player != null && player.hasMoved()){
-            JSONObject data = new JSONObject();
-            try {
-                data.put("x", player.getX());
-                data.put("y", player.getY());
-                socket.emit("playerMoved", data);
-            } catch (JSONException e){
-                Gdx.app.log("SOCKET.IO", "Error sending update data!");
-            }
-        }
+//        timer += dt;
+//        if(timer >= UPDATE_TIME && player != null && player.hasMoved()){
+//            JSONObject data = new JSONObject();
+//            try {
+//                data.put("x", player.getX());
+//                data.put("y", player.getY());
+//                socket.emit("playerMoved", data);
+//            } catch (JSONException e){
+//                Gdx.app.log("SOCKET.IO", "Error sending update data!");
+//            }
+//        }
     }
 
     public void connectSocket(){
@@ -119,8 +135,7 @@ public class MainModel {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Gdx.app.log("SocketIO", "Connected");
-                player = new Wizard(playerChar);
+
             }
         }).on("socketID", new Emitter.Listener(){
             @Override
@@ -128,10 +143,20 @@ public class MainModel {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     playerId = data.getString("id");
+                    Gdx.app.log("SocketIO", "Connected");
+                    player = new PlayerSquare(playerBanner, playerColor);
+                    Vector2 pos = positions.remove(0);
+                    player.setPosition(pos.x, pos.y);
                     Gdx.app.log("SocketIO", "My ID: " + playerId);
                 } catch (JSONException e){
                     Gdx.app.log("SocketIO", "Error getting id: " + e);
                 }
+            }
+        }).on("reject", new Emitter.Listener(){
+            @Override
+            public void call(Object... args) {
+                Gdx.app.log("SocketIO", "Too many players!");
+                Gdx.app.exit();
             }
         }).on("newPlayer", new Emitter.Listener() {
             @Override
@@ -140,7 +165,10 @@ public class MainModel {
                 try {
                     String newPlayerId = data.getString("id");
                     Gdx.app.log("SocketIO", "New player connected: " + newPlayerId);
-                    friends.put(newPlayerId, new Wizard(friendlyChar));
+                    PlayerSquare otherPlayer = new PlayerSquare(playerBanner, colors.remove(0)); //color is now taken
+                    Vector2 pos = positions.remove(0);
+                    otherPlayer.setPosition(pos.x, pos.y);
+                    connectedPlayers.put(newPlayerId, otherPlayer); //color is now taken
                 } catch (JSONException e){
                     Gdx.app.log("SocketIO", "Error getting new player id: " + e);
                 }
@@ -151,7 +179,10 @@ public class MainModel {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     String id = data.getString("id");
-                    friends.remove(id); //remove the player that disconnected from the game state
+                    colors.add(connectedPlayers.get(id).getPlayerColor()); //add the color back to the available list
+                    positions.add(new Vector2(connectedPlayers.get(id).getX(), connectedPlayers.get(id).getY()));
+                    connectedPlayers.remove(id); //remove the player that disconnected from the game state
+
                 } catch (JSONException e){
                     Gdx.app.log("SocketIO", "Error getting player id: " + e);
                 }
@@ -162,30 +193,13 @@ public class MainModel {
                 JSONArray objects = (JSONArray) args[0];
                 try {
                     for(int i = 0; i < objects.length(); i++){
-                        Wizard coopPlayer = new Wizard(friendlyChar);
-                        Vector2 position = new Vector2();
-                        position.x = ((Double) objects.getJSONObject(i).getDouble("x")).floatValue();
-                        position.y = ((Double) objects.getJSONObject(i).getDouble("y")).floatValue();
-                        coopPlayer.setPosition(position.x, position.y);
-                        friends.put(objects.getJSONObject(i).getString("id"), coopPlayer);
+                        PlayerSquare otherPlayer = new PlayerSquare(playerBanner, colors.remove(0)); //color is now taken
+                        Vector2 pos = positions.remove(0);
+                        otherPlayer.setPosition(pos.x, pos.y);
+                        connectedPlayers.put(objects.getJSONObject(i).getString("id"), otherPlayer);
                     }
                 } catch (JSONException e){
                     Gdx.app.log("SocketIO", "Error getting player list: " + e);
-                }
-            }
-        }).on("playerMoved", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    String playerId = data.getString("id");
-                    Double x = data.getDouble("x");
-                    Double y = data.getDouble("y");
-                    if(friends.get(playerId) != null){
-                        friends.get(playerId).setPosition(x.floatValue(),y.floatValue());
-                    }
-                } catch (JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting player movement: " + e);
                 }
             }
         });

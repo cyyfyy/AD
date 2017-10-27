@@ -25,9 +25,10 @@ public class AssetWarehouse {
     public final String skin = "skins/flatUI.json";
 
     // Textures go here...
-    public final String playerChar = "idleWiz.png";
-    public final String friendlyChar = "idleWiz2.png";
-    public final String loadingImage = "hound.png";
+    public final String playerBanner = "blotch.png";
+    public final String checked = "check.png";
+    public final String unchecked = "nocheck.png";
+    public final String loadingImage = "dragon.png";
 
     public void queueAddFonts(){
 
@@ -38,8 +39,9 @@ public class AssetWarehouse {
     }
 
     public void queueAddImages(){
-        manager.load(playerChar, Texture.class);
-        manager.load(friendlyChar, Texture.class);
+        manager.load(playerBanner, Texture.class);
+        manager.load(checked, Texture.class);
+        manager.load(unchecked, Texture.class);
     }
 
     // a small set of images used by the loading screen

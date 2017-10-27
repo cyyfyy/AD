@@ -5,8 +5,6 @@ var players = [];
 
 function player(id, x, y){
     this.id = id;
-    this.x = x;
-    this.y = y;
 }
 
 server.listen(8080, function(){
@@ -14,19 +12,23 @@ server.listen(8080, function(){
 });
 
 io.on('connection', function(socket){
+    if(players.length >= 5){
+        socket.emit('reject');
+        socket.disconnect();
+        return;
+    }
 	console.log("Player connected!");
 	socket.emit('socketID', {id: socket.id}); //sends to one socket
 	socket.emit('getPlayers', players);
 	socket.broadcast.emit('newPlayer', {id: socket.id}); //sends to all _other_ connected clients
-	players.push(new player(socket.id, 0, 0));
-	socket.on('playerMoved', function(data){
+	players.push(new player(socket.id));
+	socket.on('submit', function(data){
 	    data.id = socket.id;
-	    socket.broadcast.emit('playerMoved', data);
+	    socket.broadcast.emit('submit', data);
 
-        console.log("playerMoved: " +
+        console.log("playerSubmit: " +
          "ID: " + data.id +
-         "X: " + data.x +
-         "Y: " + data.y);
+         "Vote: " + data.x);
 
 	    for(var i = 0; i < players.length; i++){
 	        if(players[i].id == data.id){

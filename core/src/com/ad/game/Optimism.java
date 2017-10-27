@@ -1,31 +1,12 @@
 package com.ad.game;
 
 import com.ad.game.loader.AssetWarehouse;
-import com.ad.game.sprites.Wizard;
 import com.ad.game.views.EndScreen;
 import com.ad.game.views.MainScreen;
 import com.ad.game.views.MenuScreen;
 import com.ad.game.views.PreferencesScreen;
 import com.ad.game.views.SplashScreen;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class Optimism extends Game {
 	private SplashScreen splashScreen;
@@ -39,7 +20,7 @@ public class Optimism extends Game {
 
 	public enum ScreenType {
 		MENU, PREFERENCES, MAIN, END
-	};
+	}
 	
 	@Override
 	public void create () {

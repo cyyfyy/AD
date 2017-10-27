@@ -34,7 +34,7 @@ public class SplashScreen implements Screen{
         System.out.println("Loading images....");
         parent.warehouse.queueAddLoadingImages();
         parent.warehouse.manager.finishLoading();
-        splashImage = new Image(parent.warehouse.manager.get("hound.png", Texture.class));
+        splashImage = new Image(parent.warehouse.manager.get("dragon.png", Texture.class));
 
         //houndAnimation = new Animation(0.07f, atlas.findRegions("flames/flames"), PlayMode.LOOP);
 
