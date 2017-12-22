@@ -1,4 +1,4 @@
-package com.ad.game;
+package com.wp.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;

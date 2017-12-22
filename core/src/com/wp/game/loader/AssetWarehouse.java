@@ -1,4 +1,4 @@
-package com.ad.game.loader;
+package com.wp.game.loader;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;

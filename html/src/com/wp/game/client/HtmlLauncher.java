@@ -1,9 +1,9 @@
-package com.ad.game.client;
+package com.wp.game.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.ad.game.Optimism;
+import com.wp.game.Optimism;
 
 public class HtmlLauncher extends GwtApplication {
 

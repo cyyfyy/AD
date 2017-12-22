@@ -1,8 +1,8 @@
-package com.ad.game.desktop;
+package com.wp.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.ad.game.Optimism;
+import com.wp.game.Optimism;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

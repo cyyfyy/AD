@@ -1,10 +1,10 @@
-package com.ad.game;
+package com.wp.game;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.ad.game.Optimism;
+import com.wp.game.Optimism;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

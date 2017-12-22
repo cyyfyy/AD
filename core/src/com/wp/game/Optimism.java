@@ -1,11 +1,11 @@
-package com.ad.game;
+package com.wp.game;
 
-import com.ad.game.loader.AssetWarehouse;
-import com.ad.game.views.EndScreen;
-import com.ad.game.views.MainScreen;
-import com.ad.game.views.MenuScreen;
-import com.ad.game.views.PreferencesScreen;
-import com.ad.game.views.SplashScreen;
+import com.wp.game.loader.AssetWarehouse;
+import com.wp.game.views.EndScreen;
+import com.wp.game.views.MainScreen;
+import com.wp.game.views.MenuScreen;
+import com.wp.game.views.PreferencesScreen;
+import com.wp.game.views.SplashScreen;
 import com.badlogic.gdx.Game;
 
 public class Optimism extends Game {

@@ -1,16 +1,13 @@
-package com.ad.game.models;
+package com.wp.game.models;
 
-import com.ad.game.controller.KeyboardController;
-import com.ad.game.loader.AssetWarehouse;
-import com.ad.game.sprites.PlayerSquare;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.wp.game.loader.AssetWarehouse;
+import com.wp.game.sprites.PlayerSquare;
 
 import org.json.JSONArray;
 import org.json.JSONException;

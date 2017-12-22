@@ -1,4 +1,4 @@
-package com.ad.game.views;
+package com.wp.game.views;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
