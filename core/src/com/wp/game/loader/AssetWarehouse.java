@@ -25,7 +25,8 @@ public class AssetWarehouse {
     public final String skin = "skins/flatUI.json";
 
     // Textures go here...
-    public final String playerBanner = "blotch.png";
+    public final String playerBanner = "idleWIZ.png";
+    public final String playerBanner2 = "idleWIZ2.png";
     public final String checked = "check.png";
     public final String unchecked = "nocheck.png";
     public final String loadingImage = "dragon.png";
@@ -40,6 +41,7 @@ public class AssetWarehouse {
 
     public void queueAddImages(){
         manager.load(playerBanner, Texture.class);
+        manager.load(playerBanner2, Texture.class);
         manager.load(checked, Texture.class);
         manager.load(unchecked, Texture.class);
     }

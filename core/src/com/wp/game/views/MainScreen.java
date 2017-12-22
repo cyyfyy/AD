@@ -21,7 +21,6 @@ public class MainScreen implements Screen{
     private Skin skin;
     private TextureAtlas atlas;
 
-    private ColorChooser chooser;
     private boolean connected = false;
 
     private MainModel model;
@@ -29,7 +28,6 @@ public class MainScreen implements Screen{
     public MainScreen(Optimism optimism){
         parent = optimism;
         stage = new Stage(new ScreenViewport());
-        chooser = new ColorChooser();
         model = new MainModel(parent.warehouse);
 
         parent.warehouse.queueAddSkin();
@@ -46,7 +44,6 @@ public class MainScreen implements Screen{
         table.setFillParent(true);
         stage.addActor(table);
 
-        chooser.createColorChooser(table, skin);
     }
 
     @Override
@@ -54,18 +51,12 @@ public class MainScreen implements Screen{
         model.logicStep(delta);
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if(chooser.colorChoice == null){
-            stage.act();
-            stage.draw();
-        } else if (connected) {
+        if(connected) {
             model.draw(stage.getBatch());
-
             stage.act();
             stage.draw();
         } else {
-            stage.clear(); //switch from chooser to model
-            model.connect(chooser.colorChoice);
+            model.connect();
             connected = true;
         }
     }

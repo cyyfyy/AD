@@ -2,7 +2,6 @@ package com.wp.game.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -34,12 +33,11 @@ public class MainModel {
     private Socket socket;
     private String playerId;
     private PlayerSquare player;
-    private Color playerColor;
     private Texture playerBanner;
+    private Texture playerBanner2;
     private Texture check;
     private Texture nocheck;
     private HashMap<String, PlayerSquare> connectedPlayers;
-    private ArrayList<Color> colors;
     private ArrayList<Vector2> positions;
 
     public static final int BOING_SOUND = 0;
@@ -52,18 +50,14 @@ public class MainModel {
         warehouse.queueAddImages();
         warehouse.manager.finishLoading();
 
-        playerBanner = warehouse.manager.get("blotch.png");
+        playerBanner = warehouse.manager.get("idleWIZ.png");
+        playerBanner2 = warehouse.manager.get("idleWIZ2.png");
         check = warehouse.manager.get("check.png");
         nocheck = warehouse.manager.get("nocheck.png");
         ping = warehouse.manager.get("sounds/ping.wav");
         boing = warehouse.manager.get("sounds/boing.wav");
         connectedPlayers = new HashMap<String, PlayerSquare>();
-        colors = new ArrayList<Color>();
-        colors.add(Color.RED);
-        colors.add(Color.ORANGE);
-        colors.add(Color.YELLOW);
-        colors.add(Color.GREEN);
-        colors.add(Color.BLUE);
+
         positions = new ArrayList<Vector2>();
         positions.add(new Vector2(350, 50));
         positions.add(new Vector2(200, 200));
@@ -72,9 +66,7 @@ public class MainModel {
         positions.add(new Vector2(500, 200));
     }
 
-    public void connect(Color chosenColor){
-        playerColor = chosenColor;
-        colors.remove(chosenColor);
+    public void connect(){
         connectSocket();
         configSocketEvents();
         playSound(0);
@@ -83,11 +75,9 @@ public class MainModel {
     public void draw(Batch batch){
         batch.begin();
         if(player != null){ //draw a player if they have connected
-            batch.setColor(playerColor);
             batch.draw(player.getTexture(),player.getX(),player.getY());
         }
         for(HashMap.Entry<String, PlayerSquare> entry : connectedPlayers.entrySet()){
-            batch.setColor(entry.getValue().getPlayerColor());
             batch.draw(entry.getValue().getTexture(),entry.getValue().getX(),entry.getValue().getY());
         }
         batch.end();
@@ -141,7 +131,7 @@ public class MainModel {
                 try {
                     playerId = data.getString("id");
                     Gdx.app.log("SocketIO", "Connected");
-                    player = new PlayerSquare(playerBanner, playerColor);
+                    player = new PlayerSquare(playerBanner);
                     Vector2 pos = positions.remove(0);
                     player.setPosition(pos.x, pos.y);
                     Gdx.app.log("SocketIO", "My ID: " + playerId);
@@ -162,7 +152,7 @@ public class MainModel {
                 try {
                     String newPlayerId = data.getString("id");
                     Gdx.app.log("SocketIO", "New player connected: " + newPlayerId);
-                    PlayerSquare otherPlayer = new PlayerSquare(playerBanner, colors.remove(0)); //color is now taken
+                    PlayerSquare otherPlayer = new PlayerSquare(playerBanner2);
                     Vector2 pos = positions.remove(0);
                     otherPlayer.setPosition(pos.x, pos.y);
                     connectedPlayers.put(newPlayerId, otherPlayer); //color is now taken
@@ -176,7 +166,6 @@ public class MainModel {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     String id = data.getString("id");
-                    colors.add(connectedPlayers.get(id).getPlayerColor()); //add the color back to the available list
                     positions.add(new Vector2(connectedPlayers.get(id).getX(), connectedPlayers.get(id).getY()));
                     connectedPlayers.remove(id); //remove the player that disconnected from the game state
 
@@ -190,7 +179,7 @@ public class MainModel {
                 JSONArray objects = (JSONArray) args[0];
                 try {
                     for(int i = 0; i < objects.length(); i++){
-                        PlayerSquare otherPlayer = new PlayerSquare(playerBanner, colors.remove(0)); //color is now taken
+                        PlayerSquare otherPlayer = new PlayerSquare(playerBanner2);
                         Vector2 pos = positions.remove(0);
                         otherPlayer.setPosition(pos.x, pos.y);
                         connectedPlayers.put(objects.getJSONObject(i).getString("id"), otherPlayer);
