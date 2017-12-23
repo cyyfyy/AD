@@ -140,7 +140,7 @@ public class MainModel {
             public void received (Connection connection, Object object) {
                 if (object instanceof RegistrationRequired) {
                     Register register = new Register();
-                    register.name = "connect";//UUID.randomUUID().toString();
+                    register.name = UUID.randomUUID().toString();
                     register.otherStuff = "other";
                     client.sendTCP(register);
                 }
