@@ -27,6 +27,9 @@ public class Network {
         kryo.register(MoveCharacter.class);
         kryo.register(CardChoice.class);
         kryo.register(State.class);
+        kryo.register(GameStart.class);
+        kryo.register(int[][].class);
+        kryo.register(int[].class);
     }
 
     static public class Login {
@@ -67,6 +70,10 @@ public class Network {
         public ArrayList<Pair> cities;
         public ArrayList<Pair> cards;
         public ArrayList<Pair> otherStuff;
+    }
+
+    static public class GameStart {
+        public int[][] world;
     }
 
     public class Pair {

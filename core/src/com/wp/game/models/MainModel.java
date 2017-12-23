@@ -1,8 +1,10 @@
 package com.wp.game.models;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -35,13 +37,15 @@ public class MainModel {
     private Texture nocheck;
     private HashMap<Integer, Character> connectedPlayers;
     private ArrayList<Vector2> positions;
+    private ShapeRenderer shapeRenderer;
+
+    private int[][] world;
 
     public static final int BOING_SOUND = 0;
     public static final int PING_SOUND = 1;
 
     public boolean waiting = true;
     Client client;
-    String name;
 
     public MainModel(AssetWarehouse argWarehouse){
         this.warehouse = argWarehouse;
@@ -49,6 +53,8 @@ public class MainModel {
         warehouse.queueAddSounds();
         warehouse.queueAddImages();
         warehouse.manager.finishLoading();
+
+        shapeRenderer = new ShapeRenderer();
 
         playerBanner = warehouse.manager.get("idleWIZ.png");
         playerBanner2 = warehouse.manager.get("idleWIZ2.png");
@@ -95,8 +101,39 @@ public class MainModel {
             for (HashMap.Entry<Integer, Character> entry : connectedPlayers.entrySet()) {
                 batch.draw(playerBanner, entry.getValue().getX(), entry.getValue().getY());
             }
-        } else {
-            //TODO: game code here
+        } else { //main game screen
+            for (int i = 0; i < world.length; i++) {
+                for (int j = 0; j < world.length; j++) {
+                    if(world[i][j] == 1){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(Color.BLUE);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 2){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(Color.YELLOW);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 3){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(Color.GREEN);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 4){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(Color.BROWN);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 5){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(Color.GRAY);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else {
+
+                    }
+                }
+            }
         }
         batch.end();
     }
@@ -146,8 +183,8 @@ public class MainModel {
                 }
 
                 if (object instanceof AddCharacter) { //someone else connected
-                    AddCharacter msg = (AddCharacter)object;
-                    connectedPlayers.put(msg.character.id, msg.character);
+                    AddCharacter character = (AddCharacter)object;
+                    connectedPlayers.put(character.character.id, character.character);
                     return;
                 }
 
@@ -156,9 +193,15 @@ public class MainModel {
                 }
 
                 if (object instanceof RemoveCharacter) { //someone disconnected
-                    RemoveCharacter msg = (RemoveCharacter)object;
-                    connectedPlayers.remove(msg.id);
+                    RemoveCharacter character = (RemoveCharacter)object;
+                    connectedPlayers.remove(character.id);
                     return;
+                }
+
+                if (object instanceof GameStart) { //everyone connected, start the game
+                    GameStart start = (GameStart) object;
+                    world = start.world;
+                    waiting = false;
                 }
             }
 
