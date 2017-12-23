@@ -82,13 +82,13 @@ public class MainModel {
         //name = getNameFromUser
         Login login = new Login();
         login.name = "connect";
-        client.sendTCP(login);
+        client.sendTCP(login); //send login request to server -- use name to lookup potential saved character
         playSound(0);
     }
 
     public void draw(Batch batch){
         batch.begin();
-        if(waiting) {
+        if(waiting) { //not all players have connected
             if (player != null) { //draw a player if they have connected
                 batch.draw(playerBanner, player.getX(), player.getY());
             }
@@ -110,7 +110,7 @@ public class MainModel {
     }
 
     private void handleInput(float dt){
-
+        //nah
     }
 
     public void updateServer(float dt){
@@ -137,25 +137,25 @@ public class MainModel {
             public void connected (Connection connection) {
             }
 
-            public void received (Connection connection, Object object) {
-                if (object instanceof RegistrationRequired) {
+            public void received (Connection connection, Object object) { //received message from server
+                if (object instanceof RegistrationRequired) { //server did not find saved character
                     Register register = new Register();
                     register.name = UUID.randomUUID().toString();
                     register.otherStuff = "other";
-                    client.sendTCP(register);
+                    client.sendTCP(register); //register this character with the server
                 }
 
-                if (object instanceof AddCharacter) {
+                if (object instanceof AddCharacter) { //someone else connected
                     AddCharacter msg = (AddCharacter)object;
                     connectedPlayers.put(msg.character.id, msg.character);
                     return;
                 }
 
-                if (object instanceof UpdateCharacter) {
+                if (object instanceof UpdateCharacter) { //someone's state has changed e.g. they moved etc.
                     return;
                 }
 
-                if (object instanceof RemoveCharacter) {
+                if (object instanceof RemoveCharacter) { //someone disconnected
                     RemoveCharacter msg = (RemoveCharacter)object;
                     connectedPlayers.remove(msg.id);
                     return;
@@ -163,7 +163,7 @@ public class MainModel {
             }
 
             public void disconnected (Connection connection) {
-                System.exit(0);
+                System.exit(0); //GTFO
             }
         }));
     }

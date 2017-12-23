@@ -56,7 +56,7 @@ public class MainScreen implements Screen{
             model.draw(stage.getBatch());
             stage.act();
             stage.draw();
-        } else if(waiting){
+        } else if(waiting){ //not all players are connected
             model.draw(stage.getBatch());
             stage.act();
             stage.draw();

@@ -61,14 +61,16 @@ public class WPServer {
                             }
                         }
 
+                        //try and find a saved character
                         character = loadCharacter(name);
 
-                        // Reject if couldn't load character.
+                        // Ask for registration if we could not load the character
                         if (character == null) {
                             c.sendTCP(new RegistrationRequired());
                             return;
                         }
 
+                        //found saved character, log them in
                         loggedIn(connection, character);
                         return;
                     }
@@ -105,10 +107,12 @@ public class WPServer {
                             return;
                         }
 
+                        //new character created, log them in
                         loggedIn(connection, character);
                         return;
                     }
 
+                    //TODO: not currently using MoveCharacter
                     if (object instanceof MoveCharacter) {
                         // Ignore if not logged in.
                         if (character == null) return;
@@ -134,6 +138,7 @@ public class WPServer {
                     }
                 }
 
+                //Name must not be empty
                 private boolean isValid (String value) {
                     if (value == null) return false;
                     value = value.trim();
@@ -141,6 +146,7 @@ public class WPServer {
                     return true;
                 }
 
+                //let everyone know that someone disconnected
                 public void disconnected (Connection c) {
                     CharacterConnection connection = (CharacterConnection)c;
                     if (connection.character != null) {
@@ -156,10 +162,11 @@ public class WPServer {
             server.start();
         }
 
+        //someone logged in -- add them to active player list
         void loggedIn (CharacterConnection c, Character character) {
             c.character = character;
 
-            // Add existing characters to new logged in connection.
+            // Send existing characters to new logged in connection.
             for (Character other : loggedIn) {
                 AddCharacter addCharacter = new AddCharacter();
                 addCharacter.character = other;
@@ -168,22 +175,25 @@ public class WPServer {
 
             loggedIn.add(character);
 
-            // Add logged in character to all connections.
+            // Send logged in character to all other connections.
             AddCharacter addCharacter = new AddCharacter();
             addCharacter.character = character;
             server.sendToAllTCP(addCharacter);
         }
 
+        //Serialize character to file in assets folder for later lookup
         boolean saveCharacter (Character character) {
             File file = new File("characters", character.name.toLowerCase());
             file.getParentFile().mkdirs();
 
+            //assign next id to this character
             if (character.id == 0) {
                 String[] children = file.getParentFile().list();
                 if (children == null) return false;
                 character.id = children.length + 1;
             }
 
+            //write character to file
             DataOutputStream output = null;
             try {
                 output = new DataOutputStream(new FileOutputStream(file));
@@ -203,9 +213,10 @@ public class WPServer {
             }
         }
 
+        //get character from saved file if any such file exists
         Character loadCharacter (String name) {
             File file = new File("characters", name.toLowerCase());
-            if (!file.exists()) return null;
+            if (!file.exists()) return null; //could not find a saved character
             DataInputStream input = null;
             try {
                 input = new DataInputStream(new FileInputStream(file));
