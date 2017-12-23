@@ -22,6 +22,7 @@ public class MainScreen implements Screen{
     private TextureAtlas atlas;
 
     private boolean connected = false;
+    private boolean waiting = false;
 
     private MainModel model;
 
@@ -55,9 +56,16 @@ public class MainScreen implements Screen{
             model.draw(stage.getBatch());
             stage.act();
             stage.draw();
+        } else if(waiting){
+            model.draw(stage.getBatch());
+            stage.act();
+            stage.draw();
+            if(!model.waiting){
+                connected = true;
+            }
         } else {
             model.connect();
-            connected = true;
+            waiting = true;
         }
     }
 

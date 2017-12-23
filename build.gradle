@@ -90,6 +90,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "io.socket:socket.io-client:0.6.2"
+        compile "com.esotericsoftware:kryonet:2.22.0-RC1"
     }
 }
 

@@ -7,8 +7,8 @@ gwt {
     minHeapSize="1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
-    modules 'com.ad.game.GdxDefinition'
-    devModules 'com.ad.game.GdxDefinitionSuperdev'
+    modules 'com.wp.game.GdxDefinition'
+    devModules 'com.wp.game.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
     compiler {
