@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * Created by cfenderson on 10/24/17.
+ * Created by cyyfyy on 10/24/17.
  */
 
 public class AssetWarehouse {

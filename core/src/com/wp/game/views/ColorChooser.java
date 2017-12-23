@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * Created by cfenderson on 10/26/17.
+ * Created by cyyfyy on 10/26/17.
  */
 
 public class ColorChooser {

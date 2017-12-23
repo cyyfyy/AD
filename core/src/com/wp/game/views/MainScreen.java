@@ -12,7 +12,7 @@ import com.wp.game.Optimism;
 import com.wp.game.models.MainModel;
 
 /**
- * Created by cfenderson on 10/24/17.
+ * Created by cyyfyy on 10/24/17.
  */
 
 public class MainScreen implements Screen{

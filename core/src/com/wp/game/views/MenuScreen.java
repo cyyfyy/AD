@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wp.game.Optimism;
 
 /**
- * Created by cfenderson on 10/24/17.
+ * Created by cyyfyy on 10/24/17.
  */
 
 public class MenuScreen implements Screen{
