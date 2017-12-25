@@ -6,3 +6,5 @@ android/build/
 build/
 core/build/
 desktop/build/
+local.properties
+characters/
