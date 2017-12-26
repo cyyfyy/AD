@@ -30,6 +30,7 @@ public class Network {
         kryo.register(GameStart.class);
         kryo.register(int[][].class);
         kryo.register(int[].class);
+        kryo.register(City.class);
     }
 
     static public class Login {
@@ -64,6 +65,12 @@ public class Network {
         public int discard;
         public int ban;
         public int pick;
+    }
+
+    static public class City {
+        int owner;
+        int x;
+        int y;
     }
 
     static public class State {

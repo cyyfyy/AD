@@ -17,6 +17,7 @@ import com.wp.game.loader.AssetWarehouse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -40,12 +41,17 @@ public class MainModel {
     private ShapeRenderer shapeRenderer;
 
     private int[][] world;
+    private City[] cities;
+    private List<Integer> currentCards;
 
     public static final int BOING_SOUND = 0;
     public static final int PING_SOUND = 1;
 
-    public boolean waiting = true;
-    Client client;
+    public boolean waitingForPlayersToConnect = true;
+    public boolean startPositionNotChosen = true;
+    public boolean choosingCards = false;
+    public boolean playing = false;
+    private Client client;
 
     public MainModel(AssetWarehouse argWarehouse){
         this.warehouse = argWarehouse;
@@ -94,14 +100,16 @@ public class MainModel {
 
     public void draw(Batch batch){
         batch.begin();
-        if(waiting) { //not all players have connected
+        if(waitingForPlayersToConnect) { //not all players have connected
             if (player != null) { //draw a player if they have connected
                 batch.draw(playerBanner, player.getX(), player.getY());
             }
             for (HashMap.Entry<Integer, Character> entry : connectedPlayers.entrySet()) {
                 batch.draw(playerBanner, entry.getValue().getX(), entry.getValue().getY());
             }
-        } else { //main game screen
+        } else if (startPositionNotChosen) {
+
+        } else if (playing) { //main game screen
             for (int i = 0; i < world.length; i++) {
                 for (int j = 0; j < world.length; j++) {
                     if(world[i][j] == 1){
@@ -134,6 +142,8 @@ public class MainModel {
                     }
                 }
             }
+        } else if (choosingCards) {
+
         }
         batch.end();
     }
@@ -201,7 +211,11 @@ public class MainModel {
                 if (object instanceof GameStart) { //everyone connected, start the game
                     GameStart start = (GameStart) object;
                     world = start.world;
-                    waiting = false;
+                    if(waitingForPlayersToConnect) {
+                        waitingForPlayersToConnect = false;
+                    } else if (startPositionNotChosen) {
+                        startPositionNotChosen = false;
+                    }
                 }
             }
 
