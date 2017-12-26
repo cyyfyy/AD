@@ -7,7 +7,11 @@ import com.wp.game.views.MenuScreen;
 import com.wp.game.views.PreferencesScreen;
 import com.wp.game.views.SplashScreen;
 import com.badlogic.gdx.Game;
-
+/*
+ * Commented by UlmusLeo on 12/25/2017.
+ * This is the game container/launcher it manages the various screens that are to be displayed
+ * by the game
+ */
 public class Optimism extends Game {
 	private SplashScreen splashScreen;
 	private PreferencesScreen preferencesScreen;

@@ -22,6 +22,12 @@ import java.util.UUID;
 
 /**
  * Created by cyyfyy on 10/24/17.
+ * Commented by ulmusleo 12/25/17.
+ *
+ * So this is not how we should be using a model this should be split into a view and a model and
+ * maybe a utility The model should only be game logic, independent of the graphics and networking,
+ * the view should take data from the model and display it on screen. Maybe we have an interface
+ * layer between these two or parallel to the view that does all the network stuff.
  */
 
 public class MainModel {
