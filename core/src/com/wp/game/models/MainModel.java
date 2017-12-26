@@ -108,7 +108,41 @@ public class MainModel {
                 batch.draw(playerBanner, entry.getValue().getX(), entry.getValue().getY());
             }
         } else if (startPositionNotChosen) {
-
+            long animTime = (System.currentTimeMillis()/4)%256; //divided by 4 slows the animation down
+            float red = (256-animTime)/256f;
+            Color select = new Color(red,1,0,1);
+            for (int i = 0; i < world.length; i++) {
+                for (int j = 0; j < world.length; j++) {
+                    if(world[i][j] == 1){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(new Color(0,0,0.6f,1));
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 2){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(new Color(1,1,0.4f,1));
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 3){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(select);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 4){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(new Color(0.7f,0.3f,0,1));
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else if(world[i][j] == 5){
+                        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        shapeRenderer.setColor(Color.GRAY);
+                        shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
+                        shapeRenderer.end();
+                    } else {
+                        //Something went wrong
+                    }
+                }
+            }
         } else if (playing) { //main game screen
             for (int i = 0; i < world.length; i++) {
                 for (int j = 0; j < world.length; j++) {
@@ -138,7 +172,7 @@ public class MainModel {
                         shapeRenderer.rect(5+(i*14), 5+(j*14), 14, 14);
                         shapeRenderer.end();
                     } else {
-
+                        //Something went wrong
                     }
                 }
             }
@@ -214,7 +248,7 @@ public class MainModel {
                     if(waitingForPlayersToConnect) {
                         waitingForPlayersToConnect = false;
                     } else if (startPositionNotChosen) {
-                        startPositionNotChosen = false;
+                        //startPositionNotChosen = false;
                     }
                 }
             }
