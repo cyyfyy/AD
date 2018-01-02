@@ -1,4 +1,4 @@
-package com.wp.game.commonClasses;
+package com.wp.game.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * This class is a convenient place to keep things common to both the client and server.
  */
 public class Network {
+    public static final int LOGIN_ERROR = 3001;
     static public final int port = 54555;
 
     // This registers objects that are going to be sent over the network.
@@ -28,6 +29,7 @@ public class Network {
         kryo.register(CardChoice.class);
         kryo.register(State.class);
         kryo.register(GameStart.class);
+        kryo.register(GameServerError.class);
         kryo.register(int[][].class);
         kryo.register(int[].class);
     }
@@ -75,9 +77,14 @@ public class Network {
     static public class GameStart {
         public int[][] world;
     }
+    static public class GameServerError {
+        public int errorCode;
+        public String message;
+    }
 
     public class Pair {
         public int first;
         public int second;
     }
+
 }

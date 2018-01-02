@@ -9,9 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.wp.game.commonClasses.Character;
-import com.wp.game.commonClasses.Network;
-import com.wp.game.commonClasses.Network.*;
+import com.wp.game.network.Character;
+import com.wp.game.network.Network;
+import com.wp.game.network.Network.*;
 import com.wp.game.loader.AssetWarehouse;
 
 import java.io.IOException;

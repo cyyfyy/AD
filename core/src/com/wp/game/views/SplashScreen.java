@@ -21,7 +21,7 @@ public class SplashScreen implements Screen{
 
     private int currentLoadingStage = 0;
 
-    public float countDown = 3f; //how long the splash screen takes
+    public float countDown = 0f; //how long the splash screen takes
     private Stage stage;
     private Table table;
 

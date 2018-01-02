@@ -9,7 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wp.game.Optimism;
+import com.wp.game.actors.ConnectionActor;
 import com.wp.game.models.MainModel;
+import com.wp.game.stages.MainStage;
 
 /**
  * Created by cyyfyy on 10/24/17.
@@ -19,22 +21,19 @@ public class MainScreen implements Screen{
     private Optimism parent;
     private Stage stage;
     private Skin skin;
-    private TextureAtlas atlas;
-
-    private boolean connected = false;
     private boolean waiting = false;
-
-    private MainModel model;
 
     public MainScreen(Optimism optimism){
         parent = optimism;
-        stage = new Stage(new ScreenViewport());
-        model = new MainModel(parent.warehouse);
 
         parent.warehouse.queueAddSkin();
         parent.warehouse.manager.finishLoading();
         skin = parent.warehouse.manager.get("skins/flatUI.json");
-        atlas = parent.warehouse.manager.get("skins/flatUI.atlas");
+
+        stage = new MainStage(new ScreenViewport(),parent);
+        parent.warehouse.queueAddSkin();
+        parent.warehouse.manager.finishLoading();
+
     }
 
     @Override
@@ -42,6 +41,7 @@ public class MainScreen implements Screen{
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
+        table.addActor(new ConnectionActor(parent.netClient, skin));
         table.setFillParent(true);
         stage.addActor(table);
 
@@ -49,24 +49,11 @@ public class MainScreen implements Screen{
 
     @Override
     public void render(float delta) {
-        model.logicStep(delta);
+        stage.act(delta);
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(connected) {
-            model.draw(stage.getBatch());
-            stage.act();
-            stage.draw();
-        } else if(waiting){ //not all players are connected
-            model.draw(stage.getBatch());
-            stage.act();
-            stage.draw();
-            if(!model.waiting){
-                connected = true;
-            }
-        } else {
-            model.connect();
-            waiting = true;
-        }
+        stage.draw();
+
     }
 
     @Override

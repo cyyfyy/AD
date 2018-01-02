@@ -1,4 +1,4 @@
-package com.wp.game.commonClasses;
+package com.wp.game.network;
 
 /**
  * Created by cyyfyy on 12/22/2017.

@@ -11,7 +11,7 @@ public class WorldModel {
     PlayerModel[] players = new PlayerModel[2];
     int turn = 1;
 
-    public void evaluate(){
+    public synchronized void evaluate(){
         if(!all_submitted())
             force_choice();
 

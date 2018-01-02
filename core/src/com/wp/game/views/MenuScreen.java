@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
@@ -25,6 +27,7 @@ public class MenuScreen implements Screen{
     private Skin skin;
     private TextureAtlas atlas;
     private AtlasRegion background;
+    private TextField username;
 
     public MenuScreen(Optimism optimism){
         parent = optimism;
@@ -48,17 +51,27 @@ public class MenuScreen implements Screen{
         table.setBackground(new TiledDrawable(background));
 
 
+        //create Username Field
+        Label usernameLabel = new Label("Username:", skin);
+        username = new TextField("", skin);
+        username.setMaxLength(20);
+
         //create buttons
         TextButton connect = new TextButton("Connect to server", skin);
         TextButton preferences = new TextButton("Preferences", skin);
         TextButton exit = new TextButton("Exit", skin);
 
         //add buttons to table
+        table.add(usernameLabel).fillX().uniformX();
+        table.row();
+        table.add(username).fillX().uniformX();
+        table.row().pad(10, 0, 10, 0);
         table.add(connect).fillX().uniformX();
         table.row().pad(10, 0, 10, 0);
         table.add(preferences).fillX().uniformX();
         table.row();
         table.add(exit).fillX().uniformX();
+
 
         // create button listeners
         exit.addListener(new ChangeListener() {
@@ -71,6 +84,7 @@ public class MenuScreen implements Screen{
         connect.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                parent.user.setPlayerName(username.getText());
                 parent.changeScreen(Optimism.ScreenType.MAIN);
             }
         });

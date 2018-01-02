@@ -1,6 +1,8 @@
 package com.wp.game;
 
 import com.wp.game.loader.AssetWarehouse;
+import com.wp.game.models.PlayerModel;
+import com.wp.game.network.GameNetClient;
 import com.wp.game.views.EndScreen;
 import com.wp.game.views.MainScreen;
 import com.wp.game.views.MenuScreen;
@@ -22,6 +24,9 @@ public class Optimism extends Game {
 	public AssetWarehouse warehouse = new AssetWarehouse();
 //	private Music song;
 
+	public PlayerModel user;
+	public GameNetClient netClient;
+
 	public enum ScreenType {
 		MENU, PREFERENCES, MAIN, END
 	}
@@ -30,6 +35,9 @@ public class Optimism extends Game {
 	public void create () {
 		splashScreen = new SplashScreen(this);
 		preferences = new AppPreferences();
+
+		user = new PlayerModel(PlayerModel.LOCAL_USER_ID);
+		netClient = new GameNetClient(this);
 		setScreen(splashScreen);
 
 //		warehouse.queueAddMusic(); //find any music defined in the warehouse

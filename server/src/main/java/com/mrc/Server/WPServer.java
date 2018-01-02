@@ -12,9 +12,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 
-import com.wp.game.commonClasses.Network;
-import com.wp.game.commonClasses.Network.*;
-import com.wp.game.commonClasses.Character;
+import com.wp.game.network.Network;
+import com.wp.game.network.Network.*;
+import com.wp.game.network.Character;
 
 /**
  * Created by cyyfyy on 12/22/2017.
@@ -95,6 +95,10 @@ public class WPServer {
 
                     // Reject if character already exists.
                     if (loadCharacter(register.name) != null) {
+                        GameServerError errorCode = new GameServerError();
+                        errorCode.errorCode = Network.LOGIN_ERROR;
+                        errorCode.message = "Duplicate Name";
+                        c.sendTCP(errorCode);
                         c.close();
                         return;
                     }
@@ -173,6 +177,10 @@ public class WPServer {
 
     //someone logged in -- add them to active player list
     void loggedIn (CharacterConnection c, Character character) {
+        Login loginResponse = new Login();
+        loginResponse.name = character.name;
+        c.sendTCP(loginResponse);
+
         c.character = character;
 
         // Send existing characters to new logged in connection.
