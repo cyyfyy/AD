@@ -47,13 +47,13 @@ public class MainStage extends Stage {
         netClient = game.netClient;
     }
 
-
     private void handleInput(float dt){
         //nah
     }
 
     public void updateServer(float dt){
-        if(netClient.getConnectionState() == GameNetClient.NOT_CONNECTED){
+        if(netClient.getConnectionState() == GameNetClient.NOT_CONNECTED ||
+                netClient.getConnectionState() == GameNetClient.WAITING_TO_CONNECT ){
             netClient.attemptConnection();
         }
 //        timer += dt;

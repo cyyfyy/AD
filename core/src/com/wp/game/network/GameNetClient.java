@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.minlog.Log;
 import com.wp.game.Optimism;
 
 import java.io.IOException;
@@ -16,28 +17,51 @@ public class GameNetClient {
 
     public static final int NOT_CONNECTED = 0;
     public static final int LOGGING_IN = 1;
-    public static final int CONNECTED_LOGGED_IN = 2;
+    public static final int WAITING_TO_CONNECT = 2;
+    public static final int CONNECTED_LOGGED_IN = 3;
+    public static final int CONNECTION_ERROR = 4;
+
+
 
     final String logTag = "GameNetworkClient";
     Client client;
     Optimism game;
 
     volatile int connectionState = NOT_CONNECTED;
+    long lastConnectionAttempt = 0;
+    int connectionAttempt = 0;
+    Network.GameServerError lastError;
 
 
     public GameNetClient(Optimism gameClient){
         game = gameClient;
         clientConfig();
     }
-
+    public long timeToNextAttempt(){
+        long time =  (long) Math.pow(2,connectionAttempt) - (System.currentTimeMillis() - lastConnectionAttempt);
+        if (time < 0) return 0;
+        return time;
+    }
     public boolean attemptConnection(){
-        final String host = "localhost";
+        System.out.println("Connection State: "+connectionState);
 
+        final String host = "localhost";
+        if(connectionAttempt > 0 && connectionState !=  CONNECTION_ERROR){
+            if(timeToNextAttempt() > 0){
+                connectionState = WAITING_TO_CONNECT;
+                return false;
+            }
+        }
+
+        connectionAttempt++;
+
+        lastConnectionAttempt = System.currentTimeMillis();
         try {
             client.connect(5000, host, Network.port);
             // Server communication after connection can go here, or in Listener#connectionState().
         } catch (IOException ex) {
-            Gdx.app.log(logTag,"Connection Issue",ex);
+            Gdx.app.log(logTag,"Connection Issue");
+            connectionState = WAITING_TO_CONNECT;
             return false;
         }
 
@@ -50,6 +74,18 @@ public class GameNetClient {
     }
     public int getConnectionState(){
         return connectionState;
+    }
+    public int getConnectionAttempt(){
+        return connectionAttempt;
+    }
+    public Network.GameServerError getLastError(){
+        return lastError;
+    }
+    public void reset(){
+        connectionState = NOT_CONNECTED;
+        connectionAttempt = 0;
+        lastError = null;
+        client.close();
     }
 
     private void clientConfig(){
@@ -78,8 +114,20 @@ public class GameNetClient {
                 Network.Login login = (Network.Login) object;
                 if(login.name.equals(game.user.getPlayerName())){
                     connectionState = CONNECTED_LOGGED_IN;
+                    System.out.println("connected and logged in");
+                    connectionAttempt = 0;
                 }
                 return;
+            }
+
+            if(object instanceof Network.GameServerError){
+                Network.GameServerError error = (Network.GameServerError) object;
+                if(error.errorCode == Network.LOGIN_ERROR){
+                    connectionState = CONNECTION_ERROR;
+                    lastError = error;
+                    System.out.println("Connection State: "+connectionState);
+                }
+                Log.error(error.errorCode + " " + error.message);
             }
 
             if (object instanceof Network.AddCharacter) { //someone else connectionState
@@ -103,7 +151,9 @@ public class GameNetClient {
         }
 
         public void disconnected (Connection connection) {
-            connectionState = NOT_CONNECTED;
+            if(connectionState == CONNECTED_LOGGED_IN) {
+                connectionState = NOT_CONNECTED;
+            }
         }
     }
 

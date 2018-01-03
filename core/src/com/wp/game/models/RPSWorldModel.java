@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by UlmusLeo on 12/25/2017.
  */
 
-public class WorldModel {
+public class RPSWorldModel {
     // Rock papaer sisors us a 2 person game
     PlayerModel[] players = new PlayerModel[2];
     int turn = 1;

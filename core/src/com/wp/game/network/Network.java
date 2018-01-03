@@ -2,6 +2,8 @@ package com.wp.game.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.wp.game.models.PlayerModel;
+import com.wp.game.models.RPSWorldModel;
 
 import java.lang.*;
 import java.util.ArrayList;
@@ -30,8 +32,10 @@ public class Network {
         kryo.register(State.class);
         kryo.register(GameStart.class);
         kryo.register(GameServerError.class);
-        kryo.register(int[][].class);
-        kryo.register(int[].class);
+        kryo.register(int[][].class); //unused
+        kryo.register(int[].class); //unused
+        kryo.register(PlayerModel.class);
+        kryo.register(RPSWorldModel.class);
     }
 
     static public class Login {

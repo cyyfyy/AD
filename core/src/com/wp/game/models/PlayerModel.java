@@ -19,9 +19,9 @@ public class PlayerModel {
 
 
     private int playerId;
-    private int points = 0;
+    private int RPSPoints = 0;
     private int playerState = WAITING;
-    private int playerChoice = CHOICE_NONE;
+    private int playerChoiceRPS = CHOICE_NONE;
     private boolean localUser = false;
     private String playerName = "";
 
@@ -35,13 +35,13 @@ public class PlayerModel {
         playerState = newState;
     }
     public synchronized void updateChoice(int newChoice){
-        playerChoice = newChoice;
+        playerChoiceRPS = newChoice;
     }
     public synchronized void clearChoice(){
-        playerChoice = CHOICE_NONE;
+        playerChoiceRPS = CHOICE_NONE;
     }
     public synchronized void givePoint(){
-        points += 1;
+        RPSPoints += 1;
     }
     public synchronized void setPlayerId(int playerId){
         this.playerId = playerId;
@@ -53,14 +53,14 @@ public class PlayerModel {
     public synchronized boolean isLocalUser(){
         return localUser;
     }
-    public synchronized int getPoints(){
-        return points;
+    public synchronized int getRPSPoints(){
+        return RPSPoints;
     }
     public synchronized int getId(){
         return playerId;
     }
     public synchronized int getChoice(){
-        return playerChoice;
+        return playerChoiceRPS;
     }
     public synchronized int getPlayerState(){
         return playerState;

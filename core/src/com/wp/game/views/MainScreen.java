@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wp.game.Optimism;
 import com.wp.game.actors.ConnectionActor;
@@ -41,7 +45,18 @@ public class MainScreen implements Screen{
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
+        TextButton backButton = new TextButton("Back", skin);
         table.addActor(new ConnectionActor(parent.netClient, skin));
+        table.addActor(backButton);
+
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                parent.changeScreen(Optimism.ScreenType.MENU);
+                parent.netClient.reset();
+            }
+        });
+
         table.setFillParent(true);
         stage.addActor(table);
 

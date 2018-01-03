@@ -4,12 +4,18 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 
 import com.wp.game.network.Network;
@@ -24,6 +30,7 @@ public class WPServer {
     HashSet<Character> loggedIn = new HashSet();
     World world;
     private final int WORLDSIZE = 33;//world size must be 2^n +1 e.g. 17, 33, 65 etc.
+    BufferedWriter errorOut;
 
     public WPServer () throws IOException {
         server = new Server() {
@@ -51,13 +58,14 @@ public class WPServer {
                     // Reject if the name is invalid.
                     String name = ((Login)object).name;
                     if (!isValid(name)) {
-                        c.close();
+                        sendError(c , Network.LOGIN_ERROR ,  "Invalid Name" );
                         return;
                     }
 
                     // Reject if already logged in.
                     for (Character other : loggedIn) {
                         if (other.name.equals(name)) {
+                            sendError(c , Network.LOGIN_ERROR ,  "Already Logged in" );
                             c.close();
                             return;
                         }
@@ -85,20 +93,19 @@ public class WPServer {
 
                     // Reject if the login is invalid.
                     if (!isValid(register.name)) {
+                        sendError(c , Network.LOGIN_ERROR ,  "Invalid Name" );
                         c.close();
                         return;
                     }
                     if (!isValid(register.otherStuff)) {
+                        sendError(c , Network.LOGIN_ERROR ,  "Invalid Other Stuff" );
                         c.close();
                         return;
                     }
 
                     // Reject if character already exists.
                     if (loadCharacter(register.name) != null) {
-                        GameServerError errorCode = new GameServerError();
-                        errorCode.errorCode = Network.LOGIN_ERROR;
-                        errorCode.message = "Duplicate Name";
-                        c.sendTCP(errorCode);
+                        sendError(c , Network.LOGIN_ERROR ,  "Duplicate Name" );
                         c.close();
                         return;
                     }
@@ -109,6 +116,7 @@ public class WPServer {
                     character.x = 0;
                     character.y = 0;
                     if (!saveCharacter(character)) {
+                        sendError(c , Network.LOGIN_ERROR ,  "Error Saving Character" );
                         c.close();
                         return;
                     }
@@ -166,13 +174,52 @@ public class WPServer {
         });
         server.bind(Network.port);
         server.start();
-        world = new World(WORLDSIZE, 2);
-        for(int i = 0; i < WORLDSIZE; i++){
-            for(int j = 0; j < WORLDSIZE; j++){
-                System.out.print(world.heightMap[i][j]);
+    }
+    void sendError(Connection c, int code, String message){
+        // we are sending an error to the client. Log the message we are
+        // going to send and then send it.
+        logError(code, message);
+
+        GameServerError errorCode = new GameServerError();
+        errorCode.errorCode = code;
+        errorCode.message = message;
+        c.sendTCP(errorCode);
+        while(!c.isIdle()){
+            System.out.println("Wait for non idle");
+            try {
+                this.wait(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            System.out.println();
+
         }
+    }
+    void logError(int code, String message){
+        int tryAgain = 0;
+        File file = new File("logs", "error.log");
+        while(tryAgain < 2) {
+            try {
+                StringBuilder errorBuilder = new StringBuilder();
+                errorBuilder.append(code);
+                errorBuilder.append(": ");
+                errorOut = new BufferedWriter(new FileWriter(file,true));
+
+                SimpleDateFormat sdf = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss.SSS] ");
+                Date now = new Date();
+                errorBuilder.append(sdf.format(now));
+                errorBuilder.append("Message: ");
+                errorBuilder.append(message);
+                errorBuilder.append('\n');
+
+                errorOut.write(errorBuilder.toString());
+                errorOut.flush();
+                break;
+            } catch (IOException e) {
+                    file.getParentFile().mkdirs();
+                    tryAgain += 1;
+            }
+        }
+
     }
 
     //someone logged in -- add them to active player list
@@ -196,11 +243,6 @@ public class WPServer {
         AddCharacter addCharacter = new AddCharacter();
         addCharacter.character = character;
         server.sendToAllTCP(addCharacter);
-        if(server.getConnections().length == 2){
-            GameStart start = new GameStart();
-            start.world = world.heightMap;
-            server.sendToAllTCP(start);
-        }
     }
 
     //Serialize character to file in assets folder for later lookup
